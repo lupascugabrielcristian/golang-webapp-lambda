@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -35,7 +36,18 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	jbytes, _ := json.Marshal(responseBody)
 	jstr := string(jbytes)
 
-	hdrs := map[string]string{"Access-Control-Allow-Origin": "localhost:3000"}
+	// hdrs := map[string]string{"Access-Control-Allow-Origin": "localhost:3000"}
+	hdrs := map[string]string{}
+
+	// Get origin of request
+	origin := request.Headers["Origin"]
+	if origin == "" {
+		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
+	} else if strings.Contains(origin, "localhost") {
+		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
+	} else {
+		hdrs["Access-Control-Allow-Origin"] = "https://master.d3cwzm2wqq04zv.amplifyapp.com"
+	}
 
 	response := events.APIGatewayProxyResponse{
 		StatusCode: 200,
