@@ -41,6 +41,8 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	// Get origin of request
 	origin := request.Headers["Origin"]
+	fmt.Printf("request origin %s\n", origin)
+
 	if origin == "" {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
 	} else if strings.Contains(origin, "localhost") {
