@@ -40,15 +40,15 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	hdrs := map[string]string{}
 
 	// Get origin of request
-	origin := request.Headers["Origin"]
+	origin := request.Headers["SourceRequest"]
 	fmt.Printf("request origin %s\n", origin)
 
-	if origin == "" {
+	if origin == "A" {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
-	} else if strings.Contains(origin, "localhost") {
-		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
-	} else {
+	} else if strings.Contains(origin, "B") {
 		hdrs["Access-Control-Allow-Origin"] = "https://master.d3cwzm2wqq04zv.amplifyapp.com"
+	} else {
+		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
 	}
 
 	response := events.APIGatewayProxyResponse{
