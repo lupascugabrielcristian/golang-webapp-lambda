@@ -41,7 +41,9 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if *person.Source == "A" {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
 	} else if strings.Contains(*person.Source, "B") {
-		hdrs["Access-Control-Allow-Origin"] = "https://master.d3cwzm2wqq04zv.amplifyapp.com"
+		hdrs["Access-Control-Allow-Origin"] = "https://master.d3cwzm2wqq04zv.amplifyapp.com" // From published app on prod stage
+	} else if strings.Contains(*person.Source, "C") {
+		hdrs["Access-Control-Allow-Origin"] = "https://8db35e87142744a9b114c7ba8978a032.vfs.cloud9.eu-central-1.amazonaws.com" // From Cloud9 env
 	} else {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
 	}
