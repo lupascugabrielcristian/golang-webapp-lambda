@@ -36,16 +36,11 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	jbytes, _ := json.Marshal(responseBody)
 	jstr := string(jbytes)
 
-	// hdrs := map[string]string{"Access-Control-Allow-Origin": "localhost:3000"}
 	hdrs := map[string]string{}
 
-	// Get origin of request
-	origin := request.Headers["SourceRequest"]
-	fmt.Printf("request origin %s\n", origin)
-
-	if origin == "A" {
+	if *person.Source == "A" {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
-	} else if strings.Contains(origin, "B") {
+	} else if strings.Contains(*person.Source, "B") {
 		hdrs["Access-Control-Allow-Origin"] = "https://master.d3cwzm2wqq04zv.amplifyapp.com"
 	} else {
 		hdrs["Access-Control-Allow-Origin"] = "http://localhost:3000"
@@ -66,6 +61,7 @@ type ResponseBody struct {
 }
 
 type Person struct {
+	Source    *string `json:"Source"`
 	FirstName *string `json:"firstName"`
 	LastName  *string `json:"lastName"`
 }
