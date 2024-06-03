@@ -14,6 +14,16 @@ func main() {
 	lambda.Start(handler)
 }
 
+type Person struct {
+	Source    *string `json:"Source"`
+	FirstName *string `json:"firstName"`
+	LastName  *string `json:"lastName"`
+}
+
+type ResponseBody struct {
+	Message *string `json:"message"`
+}
+
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var person Person
 	fmt.Println("urmeaza person")
@@ -56,14 +66,4 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 
 	// response.Headers["Access-Control-Allow-Origin"] = "*"
 	return response, nil
-}
-
-type ResponseBody struct {
-	Message *string `json:"message"`
-}
-
-type Person struct {
-	Source    *string `json:"Source"`
-	FirstName *string `json:"firstName"`
-	LastName  *string `json:"lastName"`
 }
