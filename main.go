@@ -8,9 +8,13 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+
+	internal "example.com/on_path_robotics2/internal"
 )
 
 func main() {
+	internal.GetComponent()
+
 	lambda.Start(handler)
 }
 
@@ -25,6 +29,9 @@ type ResponseBody struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+
+	respondToRequest(request)
+
 	var person Person
 	fmt.Println("urmeaza person")
 	err := json.Unmarshal([]byte(request.Body), &person)
