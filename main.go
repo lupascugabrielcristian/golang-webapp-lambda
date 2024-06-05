@@ -13,8 +13,6 @@ import (
 )
 
 func main() {
-	internal.GetComponent()
-
 	lambda.Start(handler)
 }
 
@@ -29,8 +27,7 @@ type ResponseBody struct {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-
-	respondToRequest(request)
+	internal.GetLambdaGateway().HandleRequest(request)
 
 	var person Person
 	fmt.Println("urmeaza person")
@@ -71,6 +68,5 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 		Headers:    hdrs,
 	}
 
-	// response.Headers["Access-Control-Allow-Origin"] = "*"
 	return response, nil
 }
