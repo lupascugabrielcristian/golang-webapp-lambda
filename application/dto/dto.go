@@ -1,5 +1,6 @@
 package framework
 
 type GetRobotsDTO struct {
-	Id string
+	Id   string
+	Name string
 }
