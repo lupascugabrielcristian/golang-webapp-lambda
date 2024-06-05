@@ -1,24 +1,21 @@
 package internal
 
 import (
-	"fmt"
-
 	"example.com/on_path_robotics2/application"
-	dto "example.com/on_path_robotics2/application/dto"
 	data "example.com/on_path_robotics2/data"
 	framework "example.com/on_path_robotics2/framework"
 )
 
-func GetUseCase(dto dto.GetRobotsDTO) {
-	fmt.Println("Use case obtained from injector file")
+func GetDBService() *framework.DBService {
+	return &framework.DBService{}
 }
 
-func GetComponent() {
-	fmt.Println("Component obtained from injector file")
+func GetRobotsDataGateway() framework.RobotsDataGateway {
+	return framework.RobotsDataGateway{Db: GetDBService()}
 }
 
 func GetGetRobotsRemote() data.GetRobotsRemote {
-	return data.GetRobotsRemote{}
+	return data.GetRobotsRemote{RemoteDataSource: GetRobotsDataGateway()}
 }
 
 func GetGetRobots() application.GetRobots {

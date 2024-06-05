@@ -1,8 +1,20 @@
 package data
 
-type GetRobotsRemote struct {
+import (
+	application "example.com/on_path_robotics2/application"
+)
+
+// SOURCES
+type RobotsDataSourceRemote interface {
+	GetRobots(id string) map[string]string
 }
 
-func (g GetRobotsRemote) GetRobots() []string {
-	return []string{"Robot 1", "Robot2"}
+// IMPLEMENTATIONS
+type GetRobotsRemote struct {
+	RemoteDataSource RobotsDataSourceRemote
+}
+
+func (g GetRobotsRemote) GetRobots() application.Robot {
+	objData := g.RemoteDataSource.GetRobots("userId")
+	return RobotFromMap(objData)
 }
