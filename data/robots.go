@@ -14,7 +14,7 @@ type GetRobotsRemote struct {
 	RemoteDataSource RobotsDataSourceRemote
 }
 
-func (g GetRobotsRemote) GetRobots() application.Robot {
-	objData := g.RemoteDataSource.GetRobots("userId")
+func (g GetRobotsRemote) GetRobots(id string) application.Robot {
+	objData := g.RemoteDataSource.GetRobots(id)
 	return RobotFromMap(objData)
 }

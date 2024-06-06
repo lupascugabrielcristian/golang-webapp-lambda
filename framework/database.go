@@ -1,14 +1,18 @@
 package framework
 
 type DBService struct {
+	Robots []map[string]string
 }
 
 func (db DBService) GetRobotsForUser(userId string) map[string]string {
-	var robotsMap = map[string]string{
-		"id":   "abc1",
-		"name": "Robot1",
+	// Filter Robots map so that id == userId
+	for _, value := range db.Robots {
+		if value["id"] == userId {
+			return value
+		}
 	}
-	return robotsMap
+
+	return nil
 }
 
 type RobotsDataGateway struct {
