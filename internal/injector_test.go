@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -15,8 +16,18 @@ func TestLambdaGateway(t *testing.T) {
 		t.Fatal("Should not get an error")
 	}
 
+	// Checking that Allow-Origin header is added
 	if response.Headers["Access-Control-Allow-Origin"] != "https://master.d3cwzm2wqq04zv.amplifyapp.com" {
 		t.Log(response.Headers["Access-Control-Allow-Origin"])
 		t.Fatal("Incorrect header")
+	}
+
+	// Checking that data is returned
+	if !strings.Contains(response.Body, "abc1") {
+		t.Fatal("Incorrect response")
+	}
+
+	if !strings.Contains(response.Body, "Robot1") {
+		t.Fatal("Incorrect response")
 	}
 }

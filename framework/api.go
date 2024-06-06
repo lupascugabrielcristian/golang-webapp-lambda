@@ -43,9 +43,9 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 	}
 
 	getRobotsDTO := dto.GetRobotsDTO{Id: *requestBody.FirstName, Name: *requestBody.LastName}
-	robot := l.GetRobotsUseCase.Invoke(getRobotsDTO)
+	robotData := l.GetRobotsUseCase.Invoke(getRobotsDTO)
 
-	response, err := generateResponse(robot)
+	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)
 	return response, err
 }
@@ -57,8 +57,8 @@ func generateErrorReponse() (events.APIGatewayProxyResponse, error) {
 	}, nil
 }
 
-func generateResponse(data application.Robot) (events.APIGatewayProxyResponse, error) {
-	msg := fmt.Sprintf("Robot found and returned %s - %s", data.Id, data.Name)
+func generateResponse(data map[string]string) (events.APIGatewayProxyResponse, error) {
+	msg := fmt.Sprintf("Robot found and returned %s - %s", data["id"], data["name"])
 	responseBody := ResponseBody{
 		Message: &msg,
 	}
