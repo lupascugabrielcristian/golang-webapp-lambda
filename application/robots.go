@@ -15,3 +15,11 @@ type GetRobots struct {
 func (g GetRobots) Invoke(dto dto.GetRobotsDTO) map[string]string {
 	return g.Source.GetRobots(dto.Id)
 }
+
+type CreateRobot struct {
+}
+
+func (g CreateRobot) Invoke(dto dto.CreateRobotsDTO) map[string]string {
+	// TODO impletment use case
+	return map[string]string{"name": "robot created"}
+}

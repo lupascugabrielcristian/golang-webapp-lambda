@@ -1,6 +1,9 @@
 package main
 
 import (
+	"errors"
+	"regexp"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 
@@ -12,5 +15,20 @@ func main() {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return internal.GetLambdaGateway().HandleRequest(request)
+	matched, err := regexp.Match(`.*/prod/robots$`, []byte(request.Path))
+	if err == nil && matched {
+		return internal.GetLambdaGateway().HandleRequest(request)
+	}
+
+	matched, err = regexp.Match(`.*/prod/get_robots$`, []byte(request.Path))
+	if err == nil && matched {
+		return internal.GetLambdaGateway().HandleRequest(request)
+	}
+
+	matched, err = regexp.Match(`.*/prod/create_robot$`, []byte(request.Path))
+	if err == nil && matched {
+		return internal.GetLambdaGateway().HandleCreateRobotRequest(request)
+	}
+
+	return internal.GetLambdaGateway().GetInvalidRequestResponse(request), errors.New("path not defined")
 }

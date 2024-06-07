@@ -24,10 +24,14 @@ func GetGetRobotsRemote() data.GetRobotsRemote {
 	return data.GetRobotsRemote{RemoteDataSource: GetRobotsDataGateway()}
 }
 
-func GetGetRobots() application.GetRobots {
-	return application.GetRobots{Source: GetGetRobotsRemote()}
+func GetGetRobots() *application.GetRobots {
+	return &application.GetRobots{Source: GetGetRobotsRemote()}
+}
+
+func GetCreateRobot() *application.CreateRobot {
+	return &application.CreateRobot{}
 }
 
 func GetLambdaGateway() framework.LambdaGateway {
-	return framework.LambdaGateway{GetRobotsUseCase: GetGetRobots()}
+	return framework.LambdaGateway{GetRobotsUseCase: GetGetRobots(), CreateRobotUseCase: GetCreateRobot()}
 }

@@ -12,25 +12,31 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func HandleGetRobotsRequest(request events.APIGatewayProxyRequest) {
-	fmt.Println("Handling GetRobots request")
-
-	dto := new(dto.GetRobotsDTO)
-	dto.Id = "request id"
-}
-
-type LambdaGateway struct {
-	GetRobotsUseCase application.GetRobots
-}
-
 type GetRobotsRequest struct {
 	Source    *string `json:"source"`
 	FirstName *string `json:"firstName"`
 	LastName  *string `json:"lastName"`
 }
 
+type CreateRobotRequest struct {
+	Source *string `json:"source"`
+	Name   *string `json:"name"`
+}
+
+type LambdaGateway struct {
+	GetRobotsUseCase   *application.GetRobots
+	CreateRobotUseCase *application.CreateRobot
+}
+
 type ResponseBody struct {
 	Message *string `json:"message"`
+}
+
+func (l LambdaGateway) GetInvalidRequestResponse(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse {
+	return events.APIGatewayProxyResponse{
+		StatusCode: http.StatusBadRequest,
+		Body:       `{"error": "Invalid request"}`,
+	}
 }
 
 func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -39,11 +45,25 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 
 	if err != nil {
 		fmt.Printf("Error parsing request body: %v", err)
-		return generateErrorReponse()
+		errorResp, err := generateErrorReponse()
+		addHeaders(&errorResp, *requestBody.Source)
+		return errorResp, err
 	}
 
 	getRobotsDTO := dto.GetRobotsDTO{Id: *requestBody.FirstName, Name: *requestBody.LastName}
 	robotData := l.GetRobotsUseCase.Invoke(getRobotsDTO)
+
+	response, err := generateResponse(robotData)
+	addHeaders(&response, *requestBody.Source)
+	return response, err
+}
+
+func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	fmt.Println("Handling CreateRobot request")
+	var requestBody CreateRobotRequest // TODO CreateRobotRequest
+
+	createRobotDTO := dto.CreateRobotsDTO{Name: *requestBody.Name}
+	robotData := l.CreateRobotUseCase.Invoke(createRobotDTO)
 
 	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)
