@@ -61,6 +61,7 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Println("Handling CreateRobot request")
 	var requestBody CreateRobotRequest // TODO CreateRobotRequest
+	err := json.Unmarshal([]byte(request.Body), &requestBody)
 
 	createRobotDTO := dto.CreateRobotsDTO{Name: *requestBody.Name}
 	robotData := l.CreateRobotUseCase.Invoke(createRobotDTO)
