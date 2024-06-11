@@ -15,20 +15,20 @@ func main() {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	matched, err := regexp.Match(`.*/prod/robots$`, []byte(request.Path))
+	matched, err := regexp.Match(`.*/robots$`, []byte(request.Path))
 	if err == nil && matched {
 		return internal.GetLambdaGateway().HandleRequest(request)
 	}
 
-	matched, err = regexp.Match(`.*/prod/get_robots$`, []byte(request.Path))
+	matched, err = regexp.Match(`.*/get_robots$`, []byte(request.Path))
 	if err == nil && matched {
 		return internal.GetLambdaGateway().HandleRequest(request)
 	}
 
-	matched, err = regexp.Match(`.*/prod/create_robot$`, []byte(request.Path))
+	matched, err = regexp.Match(`.*/create_robot$`, []byte(request.Path))
 	if err == nil && matched {
 		return internal.GetLambdaGateway().HandleCreateRobotRequest(request)
 	}
 
-	return internal.GetLambdaGateway().GetInvalidRequestResponse(request), errors.New("path not defined")
+	return internal.GetLambdaGateway().GetInvalidRequestResponse(request), errors.New("path not defined. Request path is " + request.Path)
 }
