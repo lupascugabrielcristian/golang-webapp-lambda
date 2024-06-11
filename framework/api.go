@@ -63,6 +63,13 @@ func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRe
 	var requestBody CreateRobotRequest // TODO CreateRobotRequest
 	err := json.Unmarshal([]byte(request.Body), &requestBody)
 
+	if err != nil {
+		fmt.Printf("Error parsing request body: %v", err)
+		errorResp, err := generateErrorReponse()
+		addHeaders(&errorResp, *requestBody.Source)
+		return errorResp, err
+	}
+
 	createRobotDTO := dto.CreateRobotsDTO{Name: *requestBody.Name}
 	robotData := l.CreateRobotUseCase.Invoke(createRobotDTO)
 
@@ -79,12 +86,7 @@ func generateErrorReponse() (events.APIGatewayProxyResponse, error) {
 }
 
 func generateResponse(data map[string]string) (events.APIGatewayProxyResponse, error) {
-	msg := fmt.Sprintf("Robot found and returned %s - %s", data["id"], data["name"])
-	responseBody := ResponseBody{
-		Message: &msg,
-	}
-
-	jbytes, _ := json.Marshal(responseBody)
+	jbytes, _ := json.Marshal(data)
 	jstr := string(jbytes)
 
 	response := events.APIGatewayProxyResponse{

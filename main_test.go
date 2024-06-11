@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -51,5 +52,9 @@ func TestHandlerFunction_for_prod_create_robot(t *testing.T) {
 
 	if resp.Headers["Access-Control-Allow-Origin"] != "https://master.d3cwzm2wqq04zv.amplifyapp.com" {
 		t.Fatal("Incorrect Allow-Origin header")
+	}
+
+	if !strings.Contains(resp.Body, "robot with name abc1") {
+		t.Fatalf("Incorrect response: %s", resp.Body)
 	}
 }
