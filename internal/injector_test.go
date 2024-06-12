@@ -4,6 +4,7 @@ import (
 	"strings"
 	"testing"
 
+	// "example.com/on_path_robotics2/internal"
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -30,4 +31,10 @@ func TestLambdaGateway(t *testing.T) {
 	if !strings.Contains(response.Body, "Robot1") {
 		t.Fatal("Incorrect response")
 	}
+}
+
+func TestDBClient(t *testing.T) {
+	dbService := GetDBService()
+
+	dbService.GetRobotsForUser("user")
 }

@@ -7,12 +7,15 @@ import (
 )
 
 func GetDBService() *framework.DBService {
-	db := &framework.DBService{}
-	db.Robots = []map[string]string{
-		{"id": "abc1", "name": "Robot1"},
-		{"id": "abc2", "name": "Robot2"},
-		{"id": "abc3", "name": "Robot3"},
-	}
+	// db := &framework.DBService{}
+	// db.Robots = []map[string]string{
+	// 	{"id": "abc1", "name": "Robot1"},
+	// 	{"id": "abc2", "name": "Robot2"},
+	// 	{"id": "abc3", "name": "Robot3"},
+	// }
+	// return db
+
+	db := framework.GetDbService()
 	return db
 }
 
