@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	// "example.com/on_path_robotics2/internal"
 	"github.com/aws/aws-lambda-go/events"
 )
 
@@ -36,5 +35,6 @@ func TestLambdaGateway(t *testing.T) {
 func TestDBClient(t *testing.T) {
 	dbService := GetDBService()
 
-	dbService.GetRobotsForUser("user")
+	// Should create the client
+	dbService.CreateTables()
 }

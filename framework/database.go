@@ -4,8 +4,10 @@ import (
 	"context"
 	"log"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type DBService struct {
@@ -14,7 +16,8 @@ type DBService struct {
 }
 
 func GetDbService() *DBService {
-	cfg, err := config.LoadDefaultConfig(context.TODO())
+
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,6 +41,65 @@ func (db *DBService) GetRobotsForUser(userId string) map[string]string {
 	}
 
 	return nil
+}
+
+func (db *DBService) CreateTables() {
+	if db.client == nil {
+		log.Fatal("Cannot create db client")
+	}
+
+	resp, err := db.client.ListTables(context.TODO(), &dynamodb.ListTablesInput{
+		Limit: aws.Int32(5),
+	})
+
+	if err != nil {
+		log.Fatal("Cannot list tables. " + err.Error())
+	}
+
+	db.createRobotsTable()
+
+	log.Println(resp)
+}
+
+func (db *DBService) createRobotsTable() {
+	tableName := "Robots"
+
+	param := &dynamodb.CreateTableInput{
+		AttributeDefinitions: []types.AttributeDefinition{
+			{
+				AttributeName: aws.String("Name"),
+				AttributeType: types.ScalarAttributeTypeS,
+			},
+			{
+				AttributeName: aws.String("Location"),
+				AttributeType: types.ScalarAttributeTypeS,
+			},
+			{
+				AttributeName: aws.String("Title"),
+				AttributeType: types.ScalarAttributeTypeS,
+			},
+		},
+		KeySchema: []types.KeySchemaElement{
+			{
+				AttributeName: aws.String("Name"),
+				KeyType:       types.KeyTypeHash,
+			},
+			{
+				AttributeName: aws.String("Location"),
+				KeyType:       types.KeyTypeRange,
+			},
+		},
+		ProvisionedThroughput: &types.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(5),
+			WriteCapacityUnits: aws.Int64(5),
+		},
+		TableName: aws.String(tableName),
+	}
+
+	_, err := db.client.CreateTable(context.TODO(), param)
+	if err != nil {
+		log.Fatal("Cannot create table. " + err.Error())
+	}
 }
 
 type RobotsDataGateway struct {
