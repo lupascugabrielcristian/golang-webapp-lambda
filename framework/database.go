@@ -98,7 +98,7 @@ func (db *DBService) createRobotsTable() {
 }
 
 func (db *DBService) putRobot() error {
-	item, err := attributeValue.MarshalMap()
+	item, err := dynamodbattribute.MarshalMap()
 
 	input := &dynamodb.PutItemInput{
 		TableName: aws.String("Robots"),
