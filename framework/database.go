@@ -12,12 +12,13 @@ import (
 
 type DBService struct {
 	client *dynamodb.Client
+	ctx    context.Context
 	Robots []map[string]string
 }
 
 func GetDbService() *DBService {
-
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("eu-central-1"))
+	ctx := context.Background()
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("eu-central-1"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,7 +63,6 @@ func (db *DBService) CreateTables() {
 }
 
 func (db *DBService) createRobotsTable() {
-
 	param := &dynamodb.CreateTableInput{
 		AttributeDefinitions: []types.AttributeDefinition{
 			{
@@ -95,6 +95,18 @@ func (db *DBService) createRobotsTable() {
 	if err != nil {
 		log.Fatal("Cannot create table. " + err.Error())
 	}
+}
+
+func (db *DBService) putRobot() error {
+	item, err := attributeValue.MarshalMap()
+
+	input := &dynamodb.PutItemInput{
+		TableName: aws.String("Robots"),
+		Item:      item,
+	}
+
+	_, err = db.client.PutItem(db.ctx, input)
+	return err
 }
 
 type RobotsDataGateway struct {
