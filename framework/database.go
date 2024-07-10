@@ -62,30 +62,25 @@ func (db *DBService) CreateTables() {
 }
 
 func (db *DBService) createRobotsTable() {
-	tableName := "Robots"
 
 	param := &dynamodb.CreateTableInput{
 		AttributeDefinitions: []types.AttributeDefinition{
 			{
+				AttributeName: aws.String("RobotId"),
+				AttributeType: types.ScalarAttributeTypeS,
+			},
+			{
 				AttributeName: aws.String("Name"),
-				AttributeType: types.ScalarAttributeTypeS,
-			},
-			{
-				AttributeName: aws.String("Location"),
-				AttributeType: types.ScalarAttributeTypeS,
-			},
-			{
-				AttributeName: aws.String("Title"),
 				AttributeType: types.ScalarAttributeTypeS,
 			},
 		},
 		KeySchema: []types.KeySchemaElement{
 			{
-				AttributeName: aws.String("Name"),
+				AttributeName: aws.String("RobotId"),
 				KeyType:       types.KeyTypeHash,
 			},
 			{
-				AttributeName: aws.String("Location"),
+				AttributeName: aws.String("Name"),
 				KeyType:       types.KeyTypeRange,
 			},
 		},
@@ -93,7 +88,7 @@ func (db *DBService) createRobotsTable() {
 			ReadCapacityUnits:  aws.Int64(5),
 			WriteCapacityUnits: aws.Int64(5),
 		},
-		TableName: aws.String(tableName),
+		TableName: aws.String("Robots"),
 	}
 
 	_, err := db.client.CreateTable(context.TODO(), param)
