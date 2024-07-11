@@ -1,8 +1,11 @@
 package internal
 
 import (
+	"fmt"
 	"strings"
 	"testing"
+
+	application "example.com/on_path_robotics2/application"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -32,9 +35,21 @@ func TestLambdaGateway(t *testing.T) {
 	}
 }
 
-func TestDBClient(t *testing.T) {
+func TestCreateTable(t *testing.T) {
 	dbService := GetDBService()
 
 	// Should create the client
 	dbService.CreateTables()
+}
+
+func TestAddDocumentToRobotsTable(t *testing.T) {
+	dbService := GetDBService()
+	robot := application.Robot{
+		RobotId: "someid",
+		Name:    "Some Name",
+	}
+
+	// Should add the new document to the Robots table
+	err := dbService.PutRobot(robot)
+	fmt.Println(err)
 }

@@ -6,7 +6,7 @@ import (
 
 func RobotFromMap(objData map[string]string) application.Robot {
 	return application.Robot{
-		Id:   objData["id"],
-		Name: objData["name"],
+		RobotId: objData["id"],
+		Name:    objData["name"],
 	}
 }

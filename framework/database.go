@@ -4,8 +4,11 @@ import (
 	"context"
 	"log"
 
+	application "example.com/on_path_robotics2/application"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -25,6 +28,7 @@ func GetDbService() *DBService {
 
 	dbService := DBService{}
 	dbService.client = dynamodb.NewFromConfig(cfg)
+	dbService.ctx = ctx
 
 	return &dbService
 }
@@ -97,8 +101,12 @@ func (db *DBService) createRobotsTable() {
 	}
 }
 
-func (db *DBService) putRobot() error {
-	item, err := dynamodbattribute.MarshalMap()
+func (db *DBService) PutRobot(r application.Robot) error {
+	item, err := attributevalue.MarshalMap(r)
+
+	if err != nil {
+		return err
+	}
 
 	input := &dynamodb.PutItemInput{
 		TableName: aws.String("Robots"),
