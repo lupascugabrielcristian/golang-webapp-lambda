@@ -3,10 +3,10 @@ package internal
 import (
 	"example.com/on_path_robotics2/application"
 	data "example.com/on_path_robotics2/data"
-	framework "example.com/on_path_robotics2/framework"
+	presentation "example.com/on_path_robotics2/presentation"
 )
 
-func GetDBService() *framework.DBService {
+func GetDBService() *presentation.DBService {
 	// db := &framework.DBService{}
 	// db.Robots = []map[string]string{
 	// 	{"id": "abc1", "name": "Robot1"},
@@ -15,12 +15,12 @@ func GetDBService() *framework.DBService {
 	// }
 	// return db
 
-	db := framework.GetDbService()
+	db := presentation.GetDbService()
 	return db
 }
 
-func GetRobotsDataGateway() framework.RobotsDataGateway {
-	return framework.RobotsDataGateway{Db: GetDBService()}
+func GetRobotsDataGateway() presentation.RobotsDataGateway {
+	return presentation.RobotsDataGateway{Db: GetDBService()}
 }
 
 func GetGetRobotsRemote() data.GetRobotsRemote {
@@ -35,6 +35,6 @@ func GetCreateRobot() *application.CreateRobot {
 	return &application.CreateRobot{}
 }
 
-func GetLambdaGateway() framework.LambdaGateway {
-	return framework.LambdaGateway{GetRobotsUseCase: GetGetRobots(), CreateRobotUseCase: GetCreateRobot()}
+func GetLambdaGateway() presentation.LambdaGateway {
+	return presentation.LambdaGateway{GetRobotsUseCase: GetGetRobots(), CreateRobotUseCase: GetCreateRobot()}
 }
