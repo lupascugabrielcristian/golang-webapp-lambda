@@ -7,6 +7,13 @@ import (
 	dto "example.com/on_path_robotics2/application/dto"
 )
 
+func RobotsDelegateFactory(g application.GetRobots, c application.CreateRobot) *RobotsDelegate {
+	return &RobotsDelegate{
+		getRobotsUseCase:   g,
+		createRobotUseCase: c,
+	}
+}
+
 type RobotsDelegate struct {
 	getRobotsUseCase   application.GetRobots
 	createRobotUseCase application.CreateRobot

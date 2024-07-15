@@ -3,19 +3,12 @@ package internal
 import (
 	"example.com/on_path_robotics2/application"
 	data "example.com/on_path_robotics2/data"
+	persistance "example.com/on_path_robotics2/persistance"
 	database "example.com/on_path_robotics2/database"
 	presentation "example.com/on_path_robotics2/presentation"
 )
 
 func GetDBService() *database.DBService {
-	// db := &framework.DBService{}
-	// db.Robots = []map[string]string{
-	// 	{"id": "abc1", "name": "Robot1"},
-	// 	{"id": "abc2", "name": "Robot2"},
-	// 	{"id": "abc3", "name": "Robot3"},
-	// }
-	// return db
-
 	db := database.GetDbService()
 	return db
 }
@@ -36,6 +29,14 @@ func GetCreateRobot() *application.CreateRobot {
 	return &application.CreateRobot{}
 }
 
-func GetLambdaGateway() presentation.LambdaGateway {
-	return presentation.LambdaGateway{GetRobotsUseCase: GetGetRobots(), CreateRobotUseCase: GetCreateRobot()}
+func getGetRobotsUseCase() *persistance.CreateRobotDAO {
+	return &persistance.CreateRobotDAO{}
+}
+
+func getRobotsDelegate() *presentation.RobotsDelegate {
+	return presentation.RobotsDelegateFactory(g: nil, c: getGetRobotsUseCase())
+}
+
+func GetLambdaGateway() *presentation.LambdaGateway {
+	return presentation.LambdaGatewayFactory(getRobotsDelegate())
 }

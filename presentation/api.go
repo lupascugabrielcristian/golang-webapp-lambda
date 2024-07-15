@@ -22,8 +22,14 @@ type CreateRobotRequest struct {
 	Name   *string `json:"name"`
 }
 
+func LambdaGatewayFactory(r *RobotsDelegate) *LambdaGateway {
+	return &LambdaGateway{
+		robotsDelegate: r,
+	}
+}
+
 type LambdaGateway struct {
-	robotsDelegate RobotsDelegate
+	robotsDelegate *RobotsDelegate
 }
 
 type ResponseBody struct {
