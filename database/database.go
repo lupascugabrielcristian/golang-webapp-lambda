@@ -1,14 +1,11 @@
-package presentation
+package datbase
 
 import (
 	"context"
 	"log"
 
-	application "example.com/on_path_robotics2/application"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -101,27 +98,18 @@ func (db *DBService) createRobotsTable() {
 	}
 }
 
-func (db *DBService) PutRobot(r application.Robot) error {
-	item, err := attributevalue.MarshalMap(r)
-
-	if err != nil {
-		return err
-	}
+func (db *DBService) PutRobot(item map[string]types.AttributeValue) error {
 
 	input := &dynamodb.PutItemInput{
 		TableName: aws.String("Robots"),
 		Item:      item,
 	}
 
-	_, err = db.client.PutItem(db.ctx, input)
+	_, err := db.client.PutItem(db.ctx, input)
 	return err
 }
 
-type RobotsDataGateway struct {
-	Db *DBService
-}
-
-func (r RobotsDataGateway) GetRobots(id string) map[string]string {
-	robotsMap := r.Db.GetRobotsForUser(id)
+func (db *DBService) GetRobots(id string) map[string]string {
+	robotsMap := db.GetRobotsForUser(id)
 	return robotsMap
 }

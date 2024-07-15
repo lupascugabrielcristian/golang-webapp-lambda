@@ -45,8 +45,8 @@ func TestCreateTable(t *testing.T) {
 func TestAddDocumentToRobotsTable(t *testing.T) {
 	dbService := GetDBService()
 	robot := application.Robot{
-		RobotId: "someid",
-		Name:    "Some Name",
+		RobotId: "someid2",
+		Name:    "Some Name 2",
 	}
 
 	// Should add the new document to the Robots table

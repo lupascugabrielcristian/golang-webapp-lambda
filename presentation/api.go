@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strings"
 
-	application "example.com/on_path_robotics2/application"
 	dto "example.com/on_path_robotics2/application/dto"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -24,8 +23,7 @@ type CreateRobotRequest struct {
 }
 
 type LambdaGateway struct {
-	GetRobotsUseCase   *application.GetRobots
-	CreateRobotUseCase *application.CreateRobot
+	robotsDelegate RobotsDelegate
 }
 
 type ResponseBody struct {
@@ -51,7 +49,7 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 	}
 
 	getRobotsDTO := dto.GetRobotsDTO{Id: *requestBody.FirstName, Name: *requestBody.LastName}
-	robotData := l.GetRobotsUseCase.Invoke(getRobotsDTO)
+	robotData := l.robotsDelegate.GetRobots(getRobotsDTO)
 
 	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)
@@ -70,8 +68,7 @@ func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRe
 		return errorResp, err
 	}
 
-	createRobotDTO := dto.CreateRobotsDTO{Name: *requestBody.Name}
-	robotData := l.CreateRobotUseCase.Invoke(createRobotDTO)
+	robotData := l.robotsDelegate.CreateRoobot(requestBody)
 
 	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)

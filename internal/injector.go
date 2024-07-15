@@ -3,10 +3,11 @@ package internal
 import (
 	"example.com/on_path_robotics2/application"
 	data "example.com/on_path_robotics2/data"
+	database "example.com/on_path_robotics2/database"
 	presentation "example.com/on_path_robotics2/presentation"
 )
 
-func GetDBService() *presentation.DBService {
+func GetDBService() *database.DBService {
 	// db := &framework.DBService{}
 	// db.Robots = []map[string]string{
 	// 	{"id": "abc1", "name": "Robot1"},
@@ -15,12 +16,12 @@ func GetDBService() *presentation.DBService {
 	// }
 	// return db
 
-	db := presentation.GetDbService()
+	db := database.GetDbService()
 	return db
 }
 
-func GetRobotsDataGateway() presentation.RobotsDataGateway {
-	return presentation.RobotsDataGateway{Db: GetDBService()}
+func GetRobotsDataGateway() database.RobotsDataGateway {
+	return database.RobotsDataGateway{Db: GetDBService()}
 }
 
 func GetGetRobotsRemote() data.GetRobotsRemote {

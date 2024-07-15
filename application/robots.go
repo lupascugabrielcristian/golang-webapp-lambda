@@ -2,9 +2,18 @@ package application
 
 import dto "example.com/on_path_robotics2/application/dto"
 
+// DATA
+type CreateRobotData struct {
+	Name string
+}
+
 // SOURCES
 type GetRobotsSource interface {
 	GetRobots(id string) map[string]string
+}
+
+type CreateRobotSource interface {
+	CreateRobot(data CreateRobotData)
 }
 
 // USE CASE
@@ -17,9 +26,10 @@ func (g GetRobots) Invoke(dto dto.GetRobotsDTO) map[string]string {
 }
 
 type CreateRobot struct {
+	Source CreateRobotSource
 }
 
-func (g CreateRobot) Invoke(dto dto.CreateRobotsDTO) map[string]string {
-	// TODO impletment use case
-	return map[string]string{"name": "robot with name " + dto.Name}
+func (g CreateRobot) Invoke(data CreateRobotData) bool {
+	g.Source.CreateRobot(data)
+	return true
 }
