@@ -6,12 +6,11 @@ import (
 	"net/http"
 	"strings"
 
-	dto "example.com/on_path_robotics2/application/dto"
-
 	"github.com/aws/aws-lambda-go/events"
 )
 
 type GetRobotsRequest struct {
+	UserId    *string `json:"userId"`
 	Source    *string `json:"source"`
 	FirstName *string `json:"firstName"`
 	LastName  *string `json:"lastName"`
@@ -43,7 +42,7 @@ func (l LambdaGateway) GetInvalidRequestResponse(request events.APIGatewayProxyR
 	}
 }
 
-func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (l LambdaGateway) HandleGetRobotsRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var requestBody GetRobotsRequest
 	err := json.Unmarshal([]byte(request.Body), &requestBody)
 
@@ -54,8 +53,7 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 		return errorResp, err
 	}
 
-	getRobotsDTO := dto.GetRobotsDTO{Id: *requestBody.FirstName, Name: *requestBody.LastName}
-	robotData := l.robotsDelegate.GetRobots(getRobotsDTO)
+	robotData := l.robotsDelegate.GetRobots(requestBody)
 
 	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)
@@ -63,8 +61,7 @@ func (l LambdaGateway) HandleRequest(request events.APIGatewayProxyRequest) (eve
 }
 
 func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Println("Handling CreateRobot request")
-	var requestBody CreateRobotRequest // TODO CreateRobotRequest
+	var requestBody CreateRobotRequest
 	err := json.Unmarshal([]byte(request.Body), &requestBody)
 
 	if err != nil {

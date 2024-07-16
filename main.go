@@ -17,12 +17,12 @@ func main() {
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	matched, err := regexp.Match(`.*/robots$`, []byte(request.Path))
 	if err == nil && matched {
-		return internal.GetLambdaGateway().HandleRequest(request)
+		return internal.GetLambdaGateway().HandleGetRobotsRequest(request)
 	}
 
 	matched, err = regexp.Match(`.*/get_robots$`, []byte(request.Path))
 	if err == nil && matched {
-		return internal.GetLambdaGateway().HandleRequest(request)
+		return internal.GetLambdaGateway().HandleGetRobotsRequest(request)
 	}
 
 	matched, err = regexp.Match(`.*/create_robot$`, []byte(request.Path))

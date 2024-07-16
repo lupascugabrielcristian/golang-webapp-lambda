@@ -1,4 +1,4 @@
-package datbase
+package database
 
 import (
 	"example.com/on_path_robotics2/application"
@@ -7,6 +7,10 @@ import (
 
 type RobotsDataGateway struct {
 	Db *DBService
+}
+
+func RobotsDataGatewayFactory(db *DBService) *RobotsDataGateway {
+	return &RobotsDataGateway{Db: db}
 }
 
 func (gateway *RobotsDataGateway) CreateRobot(r application.Robot) bool {
@@ -20,4 +24,9 @@ func (gateway *RobotsDataGateway) CreateRobot(r application.Robot) bool {
 	gateway.Db.PutRobot(item)
 
 	return true
+}
+
+func (gateway *RobotsDataGateway) GetRobots(userId *string) []application.Robot {
+	itemsOutput, error := gateway.Db.GetRobots(userId)
+	// TODO Unmarshall values to Robot objects
 }

@@ -8,7 +8,13 @@ type CreateRobotDAO struct {
 	datasource RobotsDataSource
 }
 
-func (dao *CreateRobotDAO) createRobot(data application.CreateRobotData) error {
+func CreateRobotDAOFactory(ds RobotsDataSource) *CreateRobotDAO {
+	return &CreateRobotDAO{
+		datasource: ds,
+	}
+}
+
+func (dao *CreateRobotDAO) CreateRobot(data application.CreateRobotData) error {
 	robot := application.Robot{
 		RobotId: "to not add here",
 		Name:    data.Name,

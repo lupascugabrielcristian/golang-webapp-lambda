@@ -5,15 +5,14 @@ import (
 	"strings"
 	"testing"
 
-	application "example.com/on_path_robotics2/application"
-
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 func TestLambdaGateway(t *testing.T) {
 	request := events.APIGatewayProxyRequest{}
 	request.Body = `{"source": "B", "firstName": "abc1", "lastName": "NU stiu"}`
-	response, err := GetLambdaGateway().HandleRequest(request)
+	response, err := GetLambdaGateway().HandleGetRobotsRequest(request)
 
 	if err != nil {
 		t.Fatal("Should not get an error")
@@ -36,17 +35,17 @@ func TestLambdaGateway(t *testing.T) {
 }
 
 func TestCreateTable(t *testing.T) {
-	dbService := GetDBService()
+	dbService := getDBService()
 
 	// Should create the client
 	dbService.CreateTables()
 }
 
 func TestAddDocumentToRobotsTable(t *testing.T) {
-	dbService := GetDBService()
-	robot := application.Robot{
-		RobotId: "someid2",
-		Name:    "Some Name 2",
+	dbService := getDBService()
+	robot := map[string]types.AttributeValue{
+		"RobotId": &types.AttributeValueMemberS{Value: "Some id"},
+		"Name":    &types.AttributeValueMemberS{Value: "Cristi 1"},
 	}
 
 	// Should add the new document to the Robots table

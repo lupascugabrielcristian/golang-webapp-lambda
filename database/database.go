@@ -1,4 +1,4 @@
-package datbase
+package database
 
 import (
 	"context"
@@ -28,21 +28,6 @@ func GetDbService() *DBService {
 	dbService.ctx = ctx
 
 	return &dbService
-}
-
-func (db *DBService) GetRobotsForUser(userId string) map[string]string {
-	// Filter Robots map so that id == userId
-	for _, value := range db.Robots {
-		if value["id"] == userId {
-			return value
-		}
-	}
-
-	if db.client == nil {
-		log.Fatal("Cannot create db client")
-	}
-
-	return nil
 }
 
 func (db *DBService) CreateTables() {
@@ -109,7 +94,12 @@ func (db *DBService) PutRobot(item map[string]types.AttributeValue) error {
 	return err
 }
 
-func (db *DBService) GetRobots(id string) map[string]string {
-	robotsMap := db.GetRobotsForUser(id)
-	return robotsMap
+func (db *DBService) GetRobots(id *string) ([]map[string]types.AttributeValue, error) {
+	input := &dynamodb.ScanInput{
+		TableName: aws.String("Robots"),
+	}
+
+	output, err := db.client.Scan(db.ctx, input)
+
+	return output.Items, err
 }

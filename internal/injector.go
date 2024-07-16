@@ -2,39 +2,38 @@ package internal
 
 import (
 	"example.com/on_path_robotics2/application"
-	data "example.com/on_path_robotics2/data"
-	persistance "example.com/on_path_robotics2/persistance"
 	database "example.com/on_path_robotics2/database"
+	"example.com/on_path_robotics2/persistance"
 	presentation "example.com/on_path_robotics2/presentation"
 )
 
-func GetDBService() *database.DBService {
+func getDBService() *database.DBService {
 	db := database.GetDbService()
 	return db
 }
 
-func GetRobotsDataGateway() database.RobotsDataGateway {
-	return database.RobotsDataGateway{Db: GetDBService()}
+func getRobotsDataGatewayFactory() *database.RobotsDataGateway {
+	return database.RobotsDataGatewayFactory(getDBService())
 }
 
-func GetGetRobotsRemote() data.GetRobotsRemote {
-	return data.GetRobotsRemote{RemoteDataSource: GetRobotsDataGateway()}
+func getGetRobotsDAO() *persistance.GetRobotsDAO {
+	return persistance.GetRobotsDAOFactory(getRobotsDataGatewayFactory())
 }
 
-func GetGetRobots() *application.GetRobots {
-	return &application.GetRobots{Source: GetGetRobotsRemote()}
+func getGetRobotsUseCase() *application.GetRobots {
+	return &application.GetRobots{Source: getGetRobotsDAO()}
 }
 
-func GetCreateRobot() *application.CreateRobot {
-	return &application.CreateRobot{}
+func getCreateRobotDAO() *persistance.CreateRobotDAO {
+	return persistance.CreateRobotDAOFactory(getRobotsDataGatewayFactory())
 }
 
-func getGetRobotsUseCase() *persistance.CreateRobotDAO {
-	return &persistance.CreateRobotDAO{}
+func getCreateRobotsUseCase() *application.CreateRobot {
+	return &application.CreateRobot{Source: getCreateRobotDAO()}
 }
 
 func getRobotsDelegate() *presentation.RobotsDelegate {
-	return presentation.RobotsDelegateFactory(g: nil, c: getGetRobotsUseCase())
+	return presentation.RobotsDelegateFactory(getGetRobotsUseCase(), getCreateRobotsUseCase())
 }
 
 func GetLambdaGateway() *presentation.LambdaGateway {
