@@ -1,7 +1,8 @@
 package database
 
 import (
-	"example.com/on_path_robotics2/application"
+	application "example.com/on_path_robotics2/application"
+
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/google/uuid"
 )
