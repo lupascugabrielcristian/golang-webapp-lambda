@@ -7,7 +7,7 @@ type CreateRobotData struct {
 
 // SOURCES
 type GetRobotsSource interface {
-	GetRobots(userId *string) map[string]string
+	GetRobots(userId *string) []Robot
 }
 
 type CreateRobotSource interface {
@@ -19,7 +19,7 @@ type GetRobots struct {
 	Source GetRobotsSource
 }
 
-func (g *GetRobots) Invoke(userId *string) map[string]string {
+func (g *GetRobots) Invoke(userId *string) []Robot {
 	return g.Source.GetRobots(userId)
 }
 

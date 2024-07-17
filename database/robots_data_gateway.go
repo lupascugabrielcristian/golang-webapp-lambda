@@ -28,5 +28,18 @@ func (gateway *RobotsDataGateway) CreateRobot(r application.Robot) bool {
 
 func (gateway *RobotsDataGateway) GetRobots(userId *string) []application.Robot {
 	itemsOutput, error := gateway.Db.GetRobots(userId)
-	// TODO Unmarshall values to Robot objects
+
+	robots := []application.Robot{}
+
+	if error != nil {
+		return robots
+	}
+
+	error = attributevalue.UnmarshalListOfMaps(itemsOutput, &robots)
+
+	if error != nil {
+		return robots
+	}
+
+	return robots
 }

@@ -34,5 +34,9 @@ func (d *RobotsDelegate) CreateRoobot(request CreateRobotRequest) map[string]str
 }
 
 func (d *RobotsDelegate) GetRobots(request GetRobotsRequest) map[string]string {
-	return d.getRobotsUseCase.Invoke(request.UserId)
+	// Aici returnez []Robot
+	_ = d.getRobotsUseCase.Invoke(request.UserId)
+	return map[string]string{
+		"result": "ok",
+	}
 }
