@@ -32,7 +32,7 @@ func CreateRobotDAOFactory(ds RobotsDataSource) *CreateRobotDAO {
 
 func (dao *CreateRobotDAO) CreateRobot(data application.CreateRobotData) error {
 	robot := application.Robot{
-		RobotId: "to not add here",
+		RobotId: "",
 		Name:    data.Name,
 	}
 

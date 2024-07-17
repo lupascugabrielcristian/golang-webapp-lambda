@@ -71,7 +71,7 @@ func (l LambdaGateway) HandleCreateRobotRequest(request events.APIGatewayProxyRe
 		return errorResp, err
 	}
 
-	robotData := l.robotsDelegate.CreateRoobot(requestBody)
+	robotData := l.robotsDelegate.CreateRobot(requestBody)
 
 	response, err := generateResponse(robotData)
 	addHeaders(&response, *requestBody.Source)

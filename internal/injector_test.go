@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	application "example.com/on_path_robotics2/application"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -51,4 +52,28 @@ func TestAddDocumentToRobotsTable(t *testing.T) {
 	// Should add the new document to the Robots table
 	err := dbService.PutRobot(robot)
 	fmt.Println(err)
+}
+
+func TestGetRobotsUseCase(t *testing.T) {
+	userId := "some id"
+	getRobots := getGetRobotsUseCase()
+
+	robots := getRobots.Invoke(&userId)
+
+	if len(robots) != 3 {
+		t.Fatal("Not 3")
+	}
+}
+
+func TestCreateRobotUseCase(t *testing.T) {
+	data := application.CreateRobotData{
+		Name: "Robot 1",
+	}
+	createRobot := getCreateRobotsUseCase()
+
+	res := createRobot.Invoke(data)
+
+	if res != true {
+		t.Fatal("Not true")
+	}
 }

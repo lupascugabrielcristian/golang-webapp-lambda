@@ -16,7 +16,7 @@ type RobotsDelegate struct {
 	createRobotUseCase *application.CreateRobot
 }
 
-func (d *RobotsDelegate) CreateRoobot(request CreateRobotRequest) map[string]string {
+func (d *RobotsDelegate) CreateRobot(request CreateRobotRequest) map[string]string {
 	data := application.CreateRobotData{
 		Name: *request.Name,
 	}

@@ -3,6 +3,7 @@ package database
 import (
 	"example.com/on_path_robotics2/application"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/google/uuid"
 )
 
 type RobotsDataGateway struct {
@@ -14,6 +15,7 @@ func RobotsDataGatewayFactory(db *DBService) *RobotsDataGateway {
 }
 
 func (gateway *RobotsDataGateway) CreateRobot(r application.Robot) bool {
+	r.RobotId = uuid.New().String()
 
 	item, err := attributevalue.MarshalMap(r) // map[string]types.AttributeValue
 
