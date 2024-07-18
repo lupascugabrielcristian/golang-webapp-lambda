@@ -85,9 +85,8 @@ func generateErrorReponse() (events.APIGatewayProxyResponse, error) {
 	}, nil
 }
 
-func generateResponse(data map[string]string) (events.APIGatewayProxyResponse, error) {
-	jbytes, _ := json.Marshal(data)
-	jstr := string(jbytes)
+func generateResponse(data []byte) (events.APIGatewayProxyResponse, error) {
+	jstr := string(data)
 
 	response := events.APIGatewayProxyResponse{
 		StatusCode: 200,

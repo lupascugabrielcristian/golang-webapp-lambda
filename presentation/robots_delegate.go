@@ -1,6 +1,8 @@
 package presentation
 
 import (
+	"encoding/json"
+
 	application "example.com/on_path_robotics2/application"
 )
 
@@ -16,27 +18,26 @@ type RobotsDelegate struct {
 	createRobotUseCase *application.CreateRobot
 }
 
-func (d *RobotsDelegate) CreateRobot(request CreateRobotRequest) map[string]string {
+func (d *RobotsDelegate) CreateRobot(request CreateRobotRequest) []byte {
 	data := application.CreateRobotData{
 		Name: *request.Name,
 	}
 	success := d.createRobotUseCase.Invoke(data)
 
 	if success {
-		return map[string]string{
-			"result": "ok",
-		}
+		return []byte(`{"result": "ok"}`)
 	} else {
-		return map[string]string{
-			"result": "nok",
-		}
+		return []byte(`{"result": "nok"}`)
 	}
 }
 
-func (d *RobotsDelegate) GetRobots(request GetRobotsRequest) map[string]string {
-	// Aici returnez []Robot
-	_ = d.getRobotsUseCase.Invoke(request.UserId)
-	return map[string]string{
-		"result": "ok",
+func (d *RobotsDelegate) GetRobots(request GetRobotsRequest) []byte {
+	robots := d.getRobotsUseCase.Invoke(request.UserId)
+
+	jsonData, err := json.Marshal(robots)
+	if err != nil {
+		return []byte(`{"result": "nok"}`)
+	} else {
+		return jsonData
 	}
 }
