@@ -1,4 +1,4 @@
-FROM golang:1.19.2 as build
+FROM golang:1.19.2 AS build
 WORKDIR /build_dir
 # Copy dependencies list
 COPY go.mod go.sum ./

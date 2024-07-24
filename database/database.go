@@ -17,7 +17,7 @@ type DBService struct {
 }
 
 func GetDbService() *DBService {
-	ctx := context.Background()
+	ctx := context.TODO()
 	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion("eu-central-1"))
 	if err != nil {
 		log.Fatal(err)
