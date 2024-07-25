@@ -2,7 +2,9 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -22,6 +24,11 @@ func GetDbService() *DBService {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	provider := cfg.Credentials
+	cred, _ := provider.Retrieve(ctx)
+	fmt.Fprintln(os.Stdout, "Source: "+cred.Source)
+	fmt.Fprintln(os.Stdout, "AccessKeyID: "+cred.AccessKeyID)
 
 	dbService := DBService{}
 	dbService.client = dynamodb.NewFromConfig(cfg)
