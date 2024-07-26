@@ -107,6 +107,10 @@ func (db *DBService) GetRobots(id *string) ([]map[string]types.AttributeValue, e
 	}
 
 	output, err := db.client.Scan(db.ctx, input)
+	if err != nil {
+		fmt.Fprintf(os.Stdout, "Error: %s\n", err)
+		return []map[string]types.AttributeValue{}, err
+	}
 
 	return output.Items, err
 }

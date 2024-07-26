@@ -61,7 +61,7 @@ func TestGetRobotsUseCase(t *testing.T) {
 	robots := getRobots.Invoke(&userId)
 
 	if len(robots) != 3 {
-		t.Fatal("Not 3")
+		t.Fatal("Should be 3 items in database")
 	}
 }
 
